@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: zenite
+
+  data:
+    mongodb:
+      uri: mongodb://root:root@localhost:27017/zenite?authSource=admin
+
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+    deserialization:
+      fail-on-unknown-properties: false
+
+server:
+  port: 8080
+
+jwt:
+  secret: "ZEyuQS5rAcS2QGfHPHQim/A2lBfc1ngR8jI6M6+P4zE="
+  access-token-ttl-seconds: 900
+  refresh-token-ttl-seconds: 2592000
+
+passphrase:
+  words: 4
+  separator: "-"
