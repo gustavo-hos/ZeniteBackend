@@ -17,7 +17,7 @@ class DicewarePassphraseGenerator(
     private fun loadWords(): List<String> {
         val res = resourceLoader.getResource("classpath:wordlists/pt_br_animais_insetos_small.txt")
         require(res.exists()) {
-            "Missing wordlist. Add wordlists/eff_large_wordlist.txt to resources"
+            "Lista de palavras não encontrada."
         }
         return res.inputStream.bufferedReader().useLines { lines ->
             lines.map { line ->
@@ -27,13 +27,13 @@ class DicewarePassphraseGenerator(
                 parts.lastOrNull()
             }.filterNotNull().toList()
         }.also { list ->
-            require(list.isNotEmpty()) { "Wordlist is empty" }
+            require(list.isNotEmpty()) { "A lista de palavras está vazia." }
         }
     }
 
     fun generate(numWords: Int? = null): String {
         val n = numWords ?: defaultWords
-        require(n >= 3) { "Use at least 3 words" }
+        require(n >= 3) { "Use pelo menos 3 palavras." }
         return (1..n).joinToString(separator) { words[rng.nextInt(words.size)] }
     }
 }

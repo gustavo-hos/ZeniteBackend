@@ -28,12 +28,20 @@ class SecurityConfig(
             .cors { }
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .authorizeHttpRequests {
-
-                it.requestMatchers(HttpMethod.POST, "/api/v1/auth/register", "/api/v1/auth/login", "/api/v1/auth/refresh").permitAll()
+                it.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                it.requestMatchers(
+                    "/v3/api-docs/**",
+                    "/swagger-ui/**",
+                    "/swagger-ui.html"
+                ).permitAll()
+                it.requestMatchers(
+                    HttpMethod.POST,
+                    "/api/v1/auth/register",
+                    "/api/v1/auth/login",
+                    "/api/v1/auth/refresh"
+                ).permitAll()
                 it.requestMatchers("/actuator/health").permitAll()
-
                 it.requestMatchers("/api/admin/users/**").hasRole("ADMIN")
-
                 it.anyRequest().authenticated()
             }
             .oauth2ResourceServer { rs -> rs.jwt { jwt -> jwt.decoder(jwtDecoder) } }
@@ -47,7 +55,7 @@ class SecurityConfig(
     fun corsConfigurationSource(): CorsConfigurationSource {
         val cfg = CorsConfiguration().apply {
             allowedOrigins = listOf("*")
-            allowedMethods = listOf("GET","POST","PUT","PATCH","DELETE","OPTIONS")
+            allowedMethods = listOf("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
             allowedHeaders = listOf("*")
             allowCredentials = false
             maxAge = 3600

@@ -32,7 +32,7 @@ class JwtConfig(private val props: JwtProperties) {
     @Bean
     fun jwtEncoder(): JwtEncoder {
         val keyBytes = Base64.getDecoder().decode(props.secret)
-        require(keyBytes.size >= 32) { "JWT secret must be >= 32 bytes after Base64 decode" }
+        require(keyBytes.size >= 32) { "JWT secret deve ser >= 32 bytes depois do decode." }
 
         val jwk = OctetSequenceKey.Builder(keyBytes)
             .keyUse(KeyUse.SIGNATURE)
@@ -47,7 +47,7 @@ class JwtConfig(private val props: JwtProperties) {
     @Bean
     fun jwtDecoder(): JwtDecoder {
         val keyBytes = Base64.getDecoder().decode(props.secret)
-        require(keyBytes.size >= 32) { "JWT secret must be >= 32 bytes after Base64 decode" }
+        require(keyBytes.size >= 32) { "JWT secret deve ser >= 32 bytes depois do decode." }
         val secretKey = SecretKeySpec(keyBytes, "HmacSHA256")
         return NimbusJwtDecoder
             .withSecretKey(secretKey)

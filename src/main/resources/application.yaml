@@ -20,5 +20,5 @@ jwt:
   refresh-token-ttl-seconds: 2592000
 
 passphrase:
-  words: 4
+  words: 3
   separator: "-"

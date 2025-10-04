@@ -16,6 +16,6 @@ class CodeGenerator(private val repo: AuthUserRepository) {
             }
             if (!repo.existsByCode(code)) return code
         }
-        throw IllegalStateException("Could not generate a unique code after $maxTries attempts")
+        throw IllegalStateException("Não foi possível gerar um código único após $maxTries tentativas.")
     }
 }

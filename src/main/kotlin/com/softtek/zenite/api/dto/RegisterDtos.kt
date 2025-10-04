@@ -3,8 +3,7 @@ package com.softtek.zenite.api.dto
 import com.nimbusds.jose.shaded.gson.annotations.SerializedName
 
 data class RegisterRequest(
-    val password: String,
-    val words: Int? = null
+    val password: String
 )
 
 data class RegisterResponse(

@@ -3,36 +3,34 @@ package com.softtek.zenite.api.controller
 import LoginRequest
 import LoginResponse
 import UserSummary
+import com.softtek.zenite.api.AuthApi
 import com.softtek.zenite.api.dto.RegisterRequest
 import com.softtek.zenite.api.dto.RegisterResponse
 import com.softtek.zenite.security.JwtProperties
 import com.softtek.zenite.security.JwtService
 import com.softtek.zenite.service.RegistrationService
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.ResponseEntity
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.oauth2.jwt.JwtDecoder
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import java.time.Instant
 
 @RestController
-@RequestMapping("/api/v1/auth")
 class AuthController(
     private val authenticationManager: AuthenticationManager,
     private val userDetailsService: UserDetailsService,
     private val registrationService: RegistrationService,
     private val jwtService: JwtService,
     private val jwtDecoder: JwtDecoder,
-    private val props: JwtProperties
-) {
+    private val props: JwtProperties,
+    @Value("\${passphrase.words}") private val masterpassWords: Int,
+) : AuthApi {
 
-    @PostMapping("/login")
-    fun login(@RequestBody req: LoginRequest): ResponseEntity<LoginResponse> {
+    override fun login(req: LoginRequest): ResponseEntity<LoginResponse> {
         val auth = UsernamePasswordAuthenticationToken(req.code, req.password)
         val result = authenticationManager.authenticate(auth)
         val principal = result.principal as UserDetails
@@ -50,8 +48,7 @@ class AuthController(
         return ResponseEntity.ok(body)
     }
 
-    @PostMapping("/refresh")
-    fun refresh(@RequestBody payload: Map<String, String>): ResponseEntity<Map<String, Any>> {
+    override fun refresh(payload: Map<String, String>): ResponseEntity<Map<String, Any>> {
         val token = payload["refresh_token"] ?: return ResponseEntity.badRequest()
             .body(mapOf("error" to "missing refresh_token"))
 
@@ -76,9 +73,8 @@ class AuthController(
         )
     }
 
-    @PostMapping("/register")
-    fun register(@RequestBody req: RegisterRequest): ResponseEntity<RegisterResponse> {
-        val result = registrationService.register(req.password, req.words)
+    override fun register(req: RegisterRequest): ResponseEntity<RegisterResponse> {
+        val result = registrationService.register(req.password, words = masterpassWords)
         return ResponseEntity.ok(RegisterResponse(result.code, result.masterPassphrase))
     }
 }
