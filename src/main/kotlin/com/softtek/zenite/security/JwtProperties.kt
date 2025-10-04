@@ -2,9 +2,9 @@ package com.softtek.zenite.security
 
 import com.nimbusds.jose.JWSAlgorithm
 import com.nimbusds.jose.jwk.JWKSet
+import com.nimbusds.jose.jwk.KeyUse
 import com.nimbusds.jose.jwk.OctetSequenceKey
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet
-import com.nimbusds.jose.jwk.KeyUse
 import com.nimbusds.jose.proc.SecurityContext
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.EnableConfigurationProperties
@@ -15,7 +15,7 @@ import org.springframework.security.oauth2.jwt.JwtDecoder
 import org.springframework.security.oauth2.jwt.JwtEncoder
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder
-import java.util.Base64
+import java.util.*
 import javax.crypto.spec.SecretKeySpec
 
 @ConfigurationProperties(prefix = "jwt")
@@ -35,9 +35,9 @@ class JwtConfig(private val props: JwtProperties) {
         require(keyBytes.size >= 32) { "JWT secret must be >= 32 bytes after Base64 decode" }
 
         val jwk = OctetSequenceKey.Builder(keyBytes)
-            .keyUse(KeyUse.SIGNATURE)          // <--- importante
-            .algorithm(JWSAlgorithm.HS256)      // <--- importante
-            .keyID("hs256")                     // opcional
+            .keyUse(KeyUse.SIGNATURE)
+            .algorithm(JWSAlgorithm.HS256)
+            .keyID("hs256")
             .build()
 
         val jwkSource = ImmutableJWKSet<SecurityContext>(JWKSet(jwk))

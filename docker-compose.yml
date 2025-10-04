@@ -6,10 +6,14 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USER:-root}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASS:-root}
+      MONGO_INITDB_DATABASE: zenite
+      MONGO_APP_USER: ${MONGO_APP_USER:-zenite}
+      MONGO_APP_PASS: ${MONGO_APP_PASS:-zenite}
     ports:
       - "27017:27017"
     volumes:
       - mongo_data:/data/db
+      - ./docker/mongo-init:/docker-entrypoint-initdb.d:ro
     healthcheck:
       test: ["CMD-SHELL", "mongosh --username $${MONGO_INITDB_ROOT_USERNAME} --password $${MONGO_INITDB_ROOT_PASSWORD} --authenticationDatabase admin --quiet --eval 'db.runCommand({ ping: 1 }).ok' | grep 1"]
       interval: 10s
@@ -24,7 +28,7 @@ services:
       mongo:
         condition: service_healthy
     environment:
-      SPRING_DATA_MONGODB_URI: mongodb://${MONGO_APP_USER:-zenite}:${MONGO_APP_PASS:-zenite}@mongo:27017/zenite?authSource=admin
+      SPRING_DATA_MONGODB_URI: mongodb://${MONGO_APP_USER:-zenite}:${MONGO_APP_PASS:-zenite}@mongo:27017/zenite?authSource=zenite
       JWT_SECRET: ${JWT_SECRET:?set a base64 32B secret}
       SPRING_PROFILES_ACTIVE: docker
       SERVER_PORT: 8080

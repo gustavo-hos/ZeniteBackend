@@ -23,7 +23,7 @@ class JwtService(
             .claim("type", "access")
             .build()
 
-        val header = JwsHeader.with(MacAlgorithm.HS256).build()  // <---
+        val header = JwsHeader.with(MacAlgorithm.HS256).build()
         return jwtEncoder.encode(JwtEncoderParameters.from(header, claims)).tokenValue
     }
 
@@ -36,7 +36,7 @@ class JwtService(
             .claim("type", "refresh")
             .build()
 
-        val header = JwsHeader.with(MacAlgorithm.HS256).build()  // <---
+        val header = JwsHeader.with(MacAlgorithm.HS256).build()
         return jwtEncoder.encode(JwtEncoderParameters.from(header, claims)).tokenValue
     }
 }

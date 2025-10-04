@@ -1,6 +1,7 @@
 plugins {
     kotlin("jvm") version "1.9.25"
     kotlin("plugin.spring") version "1.9.25"
+    kotlin("kapt") version "1.9.25"
     id("org.springframework.boot") version "3.5.6"
     id("io.spring.dependency-management") version "1.1.7"
 }
@@ -28,6 +29,9 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-validation")
+
+    implementation("org.mapstruct:mapstruct:1.6.3")
+    kapt("org.mapstruct:mapstruct-processor:1.6.3")
 
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 

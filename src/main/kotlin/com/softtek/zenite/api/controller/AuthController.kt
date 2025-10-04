@@ -1,11 +1,13 @@
-package com.softtek.zenite.controller
+package com.softtek.zenite.api.controller
 
 import LoginRequest
 import LoginResponse
 import UserSummary
-import com.nimbusds.jose.shaded.gson.annotations.SerializedName
+import com.softtek.zenite.api.dto.RegisterRequest
+import com.softtek.zenite.api.dto.RegisterResponse
 import com.softtek.zenite.security.JwtProperties
 import com.softtek.zenite.security.JwtService
+import com.softtek.zenite.service.RegistrationService
 import org.springframework.http.ResponseEntity
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
@@ -23,6 +25,7 @@ import java.time.Instant
 class AuthController(
     private val authenticationManager: AuthenticationManager,
     private val userDetailsService: UserDetailsService,
+    private val registrationService: RegistrationService,
     private val jwtService: JwtService,
     private val jwtDecoder: JwtDecoder,
     private val props: JwtProperties
@@ -71,5 +74,11 @@ class AuthController(
                 "expires_in" to props.accessTokenTtlSeconds
             )
         )
+    }
+
+    @PostMapping("/register")
+    fun register(@RequestBody req: RegisterRequest): ResponseEntity<RegisterResponse> {
+        val result = registrationService.register(req.password, req.words)
+        return ResponseEntity.ok(RegisterResponse(result.code, result.masterPassphrase))
     }
 }
